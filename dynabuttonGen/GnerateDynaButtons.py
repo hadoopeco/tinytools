@@ -1,3 +1,5 @@
+import types
+
 __author__ = 'Mark.Wei'
 
 from xlrd import open_workbook
@@ -27,7 +29,7 @@ def generateButton(filename=None):
             flag = row
         info.append("   <button>")
         for col in closnum:
-            info.append('     <%s>%s</%s>'%(title[col],sheet.cell(row,col).value,title[col]))
+            info.append('     <%s>%s</%s>'%(title[col],convertCode(sheet.cell(row,col).value,col),title[col]))
 #            info.append('</'+title[col]+'>')
         info.append("  </button>")
         if flag == row :
@@ -43,7 +45,16 @@ def generateButton(filename=None):
     wf = open('g:/%s.xml'%filename,'w')
     wf.write(xmlstr)
 
-
+def convertCode(obj,col):
+    if col in (4,5,7):
+        if obj == 1:
+            return 'True'
+        else:
+            return 'False'
+    elif col == 2:
+        return int(obj)
+    else:
+        return obj
 generateButton("dynaButtons")
 
 
