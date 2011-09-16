@@ -14,33 +14,32 @@ def generateButton(filename=None):
 
     rownum = range(1,sheet.nrows)
     closnum = range(1,sheet.ncols)
-
-    print "rows= %s , cols %s"%(rownum,closnum)
     flag = 0
     info =['<?xml version="1.0" encoding="UTF-8"?>']
     info.append("<DynamicPageInfo>")
     for row in rownum:
+        print "line %s sheet content %s"% (row,sheet.cell(row,0).value)
         if sheet.cell(row,0).value != '':
-            info.append('<pageEntry> <key>')
-            info.append(sheet.cell(row,0).value)
-            info.append('</key>')
-            info.append('<pageInfo>')
+            info.append('<pageEntry> ')
+            info.append('  <key>%s</key>'%sheet.cell(row,0).value)
+            info.append('  <pageInfo>')
         else:
             flag = row
-        info.append("<button>")
+        info.append("   <button>")
         for col in closnum:
-            info.append('<'+title[col]+'>')
-            info.append(str(sheet.cell(row,col).value))
-            info.append('</'+title[col]+'>')
-        info.append("</button>")
-        if flag != row :
+            info.append('     <%s>%s</%s>'%(title[col],sheet.cell(row,col).value,title[col]))
+#            info.append('</'+title[col]+'>')
+        info.append("  </button>")
+        if flag == row :
            info.append('</pageInfo>')
            info.append('</pageEntry>')
-    info.append('</pageInfo>')
-    info.append('</pageEntry>')
     info.append("</DynamicPageInfo>")
+
     xmlstr =  ''.join(info)
-    
+
+    for line in info:
+        print(line)
+
     wf = open('g:/%s.xml'%filename,'w')
     wf.write(xmlstr)
 
